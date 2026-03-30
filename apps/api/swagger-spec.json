@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "healthGetHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "example": { "ok": true, "service": "api" } } }
+            }
+          }
+        },
+        "tags": ["health"]
+      }
+    }
+  },
+  "info": {
+    "title": "Starter API",
+    "description": "Backend API for the starter template",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": { "schemas": {} }
+}

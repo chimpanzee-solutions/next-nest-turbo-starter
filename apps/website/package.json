@@ -1,0 +1,32 @@
+{
+  "name": "website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "pnpm --dir ../.. run codegen",
+    "build": "next build",
+    "dev": "next dev --port 3003",
+    "lint": "eslint",
+    "start": "next start",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/openapi": "workspace:*",
+    "@tanstack/react-query": "^5.95.2",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

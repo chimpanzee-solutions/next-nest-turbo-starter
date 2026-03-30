@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "globalEnv": ["NEXT_PUBLIC_API_URL"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "tsc": {
+      "dependsOn": ["^tsc"]
+    },
+    "codegen": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

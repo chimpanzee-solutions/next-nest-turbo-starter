@@ -1,0 +1,27 @@
+{
+  "name": "@repo/openapi",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/generated.ts"
+  },
+  "scripts": {
+    "codegen": "orval",
+    "lint": "eslint . --max-warnings 0",
+    "tsc": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tanstack/react-query": "^5.95.2",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "eslint": "^9.39.1",
+    "orval": "^8.6.2",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@repo/utils",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.5.0"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "tsc": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}
