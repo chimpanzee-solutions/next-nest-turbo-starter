@@ -40,3 +40,10 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Cursor IDE (local rules / state — not shared via repo)
+.cursor/
+CLAUDE.md
+/graphify-out
+AGENTS.md
+/docs

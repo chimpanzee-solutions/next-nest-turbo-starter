@@ -1,10 +1,9 @@
 {
   "name": "next-nest-turbo-starter",
   "private": true,
-  "description": "Turborepo monorepo: NestJS API + three Next.js apps + shared packages (Orval, shadcn-style UI)",
   "scripts": {
     "build": "turbo run build",
-    "codegen": "turbo run codegen",
+    "codegen": "turbo run codegen --filter=@repo/openapi",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,cjs,json,md,css}\"",
     "lint": "turbo run lint",
@@ -13,7 +12,7 @@
     "tsc": "turbo run tsc"
   },
   "devDependencies": {
-    "eslint": "^10.1.0",
+    "eslint": "^9.39.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.7.4",
@@ -25,12 +24,17 @@
     "ignoredBuiltDependencies": [
       "sharp",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "@hono/node-server": "1.19.13",
+      "ip-address": "10.2.0",
+      "postcss": "8.5.14"
+    }
   },
   "lint-staged": {
     "*": "sh -c 'pnpm run format && pnpm run lint && pnpm run tsc'"
   },
   "engines": {
-    "node": ">=24.14.1"
+    "node": ">=24.14.1 <25"
   }
 }

@@ -1,22 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { HealthDto } from './dto/health.dto';
 
 @ApiTags('health')
 @Controller('health')
 export class HealthController {
   @Get()
-  @ApiOkResponse({
-    schema: {
-      example: {
-        ok: true,
-        service: 'api',
-      },
-    },
-  })
+  @ApiOkResponse({ type: HealthDto })
   getHealth() {
     return {
       ok: true,
-      service: 'api',
     };
   }
 }

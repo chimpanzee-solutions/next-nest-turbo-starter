@@ -1,0 +1,25 @@
+{
+  "name": "@repo/icons",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./react-icons/index.ts"
+  },
+  "scripts": {
+    "build": "svgr --out-dir react-icons --typescript --template template.js -- icons/*.svg",
+    "format": "prettier --write .",
+    "lint": "eslint \"react-icons/**/*.{ts,tsx}\" --max-warnings 0",
+    "tsc": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "19.2.2",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

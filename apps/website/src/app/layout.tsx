@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { Providers } from './providers';
+import { Providers } from '@/providers/providers';
 import './globals.css';
 
 const geistSans = Geist({
@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Starter',
-  description: 'Marketing website',
+  title: 'Next Nest Turbo Starter',
+  description: 'Public site for the starter template',
 };
 
 export default function RootLayout({

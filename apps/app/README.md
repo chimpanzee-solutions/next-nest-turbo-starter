@@ -1,60 +1,26 @@
-# App
+# Starter App
 
-**Next.js 16** main web app (App Router under **`src/app`**, React 19, Tailwind CSS 4, shared UI via **`@repo/ui`**).
+Authenticated Next.js app for the starter template. It includes sign in, sign up, forgot password, reset password, organization selection, and a minimal dashboard shell.
 
-**Dev port:** **3002** (see **`package.json`** → **`dev`**).
+## Run
 
-## Running from the monorepo
-
-From the **repository root**:
+From the monorepo root:
 
 ```sh
 pnpm install
 cp apps/app/.env.example apps/app/.env
-# set NEXT_PUBLIC_API_URL (e.g. http://localhost:3000)
 pnpm --filter app dev
 ```
 
-**`predev`** runs root **`pnpm run codegen`** (Orval) before Next. Ensure **`apps/api/swagger-spec.json`** is up to date when you need a fresh **`@repo/openapi`** client (see [API README](../api/README.md)).
-
-## Running only this app
-
-Requires a **root `pnpm install`** so workspace packages resolve.
-
-From **`apps/app`**:
-
-```sh
-cp .env.example .env
-pnpm dev
-```
-
-Or from root: **`pnpm --filter app dev`**.
-
 ## Environment
 
-| Variable              | Purpose                                                                               |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_API_URL` | Public URL of the **API** (must be a valid URL). Example: **`http://localhost:3000`** |
+- `NEXT_PUBLIC_API_URL`: public API URL
+- `NEXT_PUBLIC_REFRESH_COOKIE_NAME`: refresh cookie name used by auth helpers
 
-Validated in **`src/env.ts`** (Zod).
+Validation lives in [src/env.ts](./src/env.ts).
 
-## Stack notes
+## Notes
 
-- Same workspace pattern as **admin**: **`@repo/openapi`**, **`@repo/ui`**, **`@repo/utils`**, **`transpilePackages`**, **`components.json`**, **`src/app/globals.css`** with **`@source`** for **`packages/ui`**
-- **`tsconfig.json`** **`paths`** for **`@repo/*`** match **`components.json`** so the shadcn CLI resolves correctly
-- **ESLint:** **`settings.next.rootDir`** is **`src`** in shared config (avoids the plugin scanning **`apps/app/app`**)
-
-## Scripts
-
-| Script                              | Purpose                    |
-| ----------------------------------- | -------------------------- |
-| **`pnpm dev`**                      | Next dev server (**3002**) |
-| **`pnpm build`** / **`pnpm start`** | Production build / start   |
-| **`pnpm tsc`**                      | Typecheck                  |
-| **`pnpm lint`**                     | ESLint                     |
-
-## Related
-
-- [Root README](../../README.md)
-- [API README](../api/README.md)
-- [Admin](../admin/README.md) · [Website](../website/README.md)
+- Password reset links depend on `APP_PUBLIC_URL` in `apps/api`
+- Generated API types come from `@repo/openapi`
+- The dashboard and organization selection screens are intentionally minimal starter placeholders

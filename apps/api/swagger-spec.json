@@ -9,11 +9,311 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "example": { "ok": true, "service": "api" } } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthDto"
+                }
+              }
             }
           }
         },
         "tags": ["health"]
+      }
+    },
+    "/api/auth/admin/login": {
+      "post": {
+        "operationId": "authAdminLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType (refresh token only in Set-Cookie)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts. Please try again later."
+          }
+        },
+        "summary": "Admin UI login — access token in body, refresh in HttpOnly cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "authLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts. Please try again later."
+          }
+        },
+        "summary": "Login — access token in body, refresh in HttpOnly cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "operationId": "authSignup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthSignupBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "accessToken, tokenType",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts. Please try again later."
+          }
+        },
+        "summary": "Create organization account — access token in body, refresh in HttpOnly cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "operationId": "authForgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic success message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMessageResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts. Please try again later."
+          }
+        },
+        "summary": "Request password reset (organization app users only; same response whether email exists)",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "operationId": "authResetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMessageResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts. Please try again later."
+          }
+        },
+        "summary": "Complete password reset with token from email link",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/admin/session": {
+      "post": {
+        "operationId": "authAdminSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType, me",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Admin UI bootstrap — issue access token and me from admin refresh cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/admin/refresh": {
+      "post": {
+        "operationId": "authAdminRefresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthRefreshResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Admin UI — issue new access token using admin refresh cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/admin/logout": {
+      "post": {
+        "operationId": "authAdminLogout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Admin refresh session revoked"
+          }
+        },
+        "summary": "Admin UI — revoke admin refresh session and clear cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/session": {
+      "post": {
+        "operationId": "authSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType, me",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Issue access token and me using refresh cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "authRefresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "accessToken, tokenType",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthRefreshResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Issue new access token using refresh cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "authLogout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Refresh session revoked"
+          }
+        },
+        "summary": "Revoke refresh session and clear cookie",
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "authMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Current user, orgs, roles, permissions",
+        "tags": ["auth"]
       }
     }
   },
@@ -25,5 +325,266 @@
   },
   "tags": [],
   "servers": [],
-  "components": { "schemas": {} }
+  "components": {
+    "securitySchemes": {
+      "access-token": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Short-lived JWT (login or POST /auth/refresh)"
+      }
+    },
+    "schemas": {
+      "HealthDto": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": ["ok"]
+      },
+      "AuthLoginBodyDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "email@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "rememberMe": {
+            "type": "boolean"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "AuthLoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        },
+        "required": ["accessToken", "tokenType"]
+      },
+      "AuthSignupBodyDto": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string",
+            "example": "Acme Workspace"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "jane@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8
+          },
+          "acceptTerms": {
+            "type": "boolean",
+            "example": true
+          },
+          "planCode": {
+            "type": "string",
+            "example": "growth"
+          }
+        },
+        "required": ["organizationName", "name", "email", "password", "acceptTerms"]
+      },
+      "ForgotPasswordBodyDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": ["email"]
+      },
+      "AuthMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
+      },
+      "ResetPasswordBodyDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8
+          }
+        },
+        "required": ["token", "password"]
+      },
+      "MeUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPlatformOwner": {
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "email", "name", "isPlatformOwner"]
+      },
+      "MeOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["workspace"]
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "membershipStatus": {
+            "type": "string",
+            "enum": ["invited", "active", "suspended"]
+          },
+          "isOwner": {
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "name", "type", "isActive", "membershipStatus", "isOwner"]
+      },
+      "MeRoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contextType": {
+            "type": "string",
+            "enum": ["platform", "organization"]
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSystem": {
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "name", "contextType", "organizationId", "isSystem"]
+      },
+      "MePermissionDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "module": {
+            "type": "string"
+          },
+          "contextType": {
+            "type": "string",
+            "enum": ["platform", "organization"]
+          }
+        },
+        "required": ["key", "name", "module", "contextType"]
+      },
+      "AuthMeResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/MeUserDto"
+          },
+          "organizations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MeOrganizationDto"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MeRoleDto"
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MePermissionDto"
+            }
+          }
+        },
+        "required": ["user", "organizations", "roles", "permissions"]
+      },
+      "AuthSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          },
+          "me": {
+            "$ref": "#/components/schemas/AuthMeResponseDto"
+          }
+        },
+        "required": ["accessToken", "tokenType", "me"]
+      },
+      "AuthRefreshResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        },
+        "required": ["accessToken", "tokenType"]
+      }
+    }
+  }
 }

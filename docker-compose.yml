@@ -6,21 +6,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: starter
+      POSTGRES_DB: starter_db
     ports:
-      - "7777:5432"
+      - "7778:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
 
-  redis:
-    image: redis:8.6.2-alpine
-    container_name: starter-redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
 volumes:
   postgres_data:
-  redis_data:

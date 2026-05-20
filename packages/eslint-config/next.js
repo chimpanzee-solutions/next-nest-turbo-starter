@@ -1,11 +1,10 @@
-import js from '@eslint/js';
 import { globalIgnores } from 'eslint/config';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import tseslint from 'typescript-eslint';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginReact from 'eslint-plugin-react';
 import globals from 'globals';
 import pluginNext from '@next/eslint-plugin-next';
+import tseslint from 'typescript-eslint';
 import { config as baseConfig } from './base.js';
 
 /**
@@ -15,9 +14,11 @@ import { config as baseConfig } from './base.js';
  * */
 export const nextJsConfig = [
   ...baseConfig,
-  js.configs.recommended,
-  eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  {
+    ...tseslint.configs.disableTypeChecked,
+    files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
+  },
   globalIgnores([
     // Default ignores of eslint-config-next:
     '.next/**',
@@ -26,14 +27,36 @@ export const nextJsConfig = [
     'next-env.d.ts',
   ]),
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: process.cwd(),
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksVoidReturn: {
+            attributes: false,
+          },
+        },
+      ],
+    },
+  },
+  {
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
       ...pluginReact.configs.flat.recommended.languageOptions,
       globals: {
+        ...globals.browser,
         ...globals.serviceworker,
       },
     },
   },
+  jsxA11yPlugin.flatConfigs.recommended,
   {
     plugins: {
       '@next/next': pluginNext,

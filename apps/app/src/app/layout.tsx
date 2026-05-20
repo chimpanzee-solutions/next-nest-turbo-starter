@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { Providers } from './providers';
+import { configureApiClient } from '@repo/openapi/api-client';
+
+import { getServerApiClientConfig } from '@/lib/api/api-client-config';
+import { Providers } from '@/providers/providers';
 import './globals.css';
+
+configureApiClient(getServerApiClientConfig());
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

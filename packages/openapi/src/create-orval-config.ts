@@ -20,7 +20,6 @@ export function createOrvalConfig({
       mode: 'single',
       target: outputTarget,
       client: 'react-query',
-      prettier: true,
       override: {
         mutator: {
           name: 'customClient',

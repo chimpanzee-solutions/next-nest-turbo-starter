@@ -1,7 +1,21 @@
 # `@repo/eslint-config`
 
-Shared **ESLint** flat configs for this monorepo: **Next.js** apps, **NestJS** API, and internal **React** libraries. Consumed as **`@repo/eslint-config`** from **`apps/*`** and **`packages/*`**.
+Shared **ESLint** flat configs for this monorepo.
 
-Package export **`@repo/eslint-config/next-js`** maps to **`next.js`**: **`settings.next.rootDir`** is **`src`** so **`@next/eslint-plugin-next`** resolves **`src/app`** (avoids scanning **`apps/app/app`** when the workspace is named **`app`**).
+| Package subpath                      | Use                                     |
+| ------------------------------------ | --------------------------------------- |
+| `@repo/eslint-config/next-js`        | Next.js apps (`src/app`, App Router)    |
+| `@repo/eslint-config/nest`           | NestJS API                              |
+| `@repo/eslint-config/react-internal` | Shared React packages (e.g. `@repo/ui`) |
 
-See each workspace’s **`eslint.config.mjs`** for the import (**`next-js`**, **`nest`**, **`react-internal`**).
+Each workspace imports the preset in **`eslint.config.mjs`**. The Next preset sets **`settings.next.rootDir`** to **`src`** so the Next ESLint plugin resolves `src/app` correctly.
+
+## Conventions
+
+- TypeScript files use **`@typescript-eslint/no-unused-vars`**.
+- Plain JS files use the core **`no-unused-vars`** rule.
+- Names that intentionally start with **`_`** are ignored in both cases.
+
+## Related
+
+- [Root README](../../README.md)

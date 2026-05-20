@@ -1,88 +1,80 @@
-# API
+# Starter API
 
-**NestJS 11** backend: REST + Swagger UI at **`/api/docs`**, OpenAPI JSON at **`/api-json`**, **Prisma 7** + PostgreSQL, **Redis** / **BullMQ** / **Socket.IO** (infrastructure for future features).
+NestJS backend for the starter template. It ships with auth, organization membership, and billing primitives, plus Swagger and a committed OpenAPI spec.
 
-**HTTP port:** **3000** by default (`PORT` in **`.env`**).
+## Run
 
-## Running from the monorepo (recommended)
-
-From the **repository root**:
+From the monorepo root:
 
 ```sh
 pnpm install
 docker compose up -d
 cp apps/api/.env.example apps/api/.env
-# edit apps/api/.env
-pnpm --filter api run db:migrate
+pnpm --filter api run db:push
+pnpm --filter api run db:seed
 pnpm --filter api dev
 ```
 
-`predev` runs **`db:generate`** (Prisma client) then **root `codegen`** (Orval client for `@repo/openapi`).
-
-## Running only this app (from `apps/api`)
-
-Install and env are still expected from the monorepo (`pnpm install` at repo root). From **`apps/api`**:
-
-```sh
-pnpm install          # if not already done at root
-cp .env.example .env
-pnpm run db:migrate   # first time / after schema changes
-pnpm run dev
-```
-
-Use **`pnpm --dir ../..`** to invoke root scripts when needed, e.g. `pnpm --dir ../.. run codegen`.
-
 ## Environment
 
-Copy **`apps/api/.env.example`** → **`.env`**.
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET`: signing key for access and refresh tokens
+- `JWT_ACCESS_EXPIRES_IN`: access token TTL
+- `JWT_REFRESH_EXPIRES_IN`: refresh token TTL when remember-me is enabled
+- `JWT_REFRESH_SESSION_EXPIRES_IN`: refresh token TTL for session-only logins
+- `PASSWORD_RESET_EXPIRES_IN`: password reset TTL
+- `APP_PUBLIC_URL`: public URL for `apps/app`
+- `CORS_ALLOWED_ORIGINS`: allowed web origins
+- `REFRESH_COOKIE_NAME`: app refresh cookie name
+- `ADMIN_REFRESH_COOKIE_NAME`: admin refresh cookie name
+- `TRUST_PROXY`: Express trust proxy setting
+- `PORT`: API port
 
-| Variable       | Purpose                                                                                               |
-| -------------- | ----------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL` | PostgreSQL connection string (default in `.env.example` matches `docker-compose`: host port **7777**) |
-| `REDIS_URL`    | Redis (**6379** locally)                                                                              |
-| `JWT_SECRET`   | Signing secret (change in production)                                                                 |
-| `PORT`         | HTTP port (default **3000**)                                                                          |
+Validation lives in [src/env.ts](./src/env.ts).
 
-Prisma reads **`DATABASE_URL`** via **`prisma.config.ts`** (and `dotenv`).
+## Database
 
-**`tsconfig.json`** includes **`src/**/\*`** and **`prisma.config.ts`** so **`tsc`\*\* and type-aware ESLint cover the Prisma config file.
+- Schema: [prisma/schema.prisma](./prisma/schema.prisma)
+- Initial migration: [prisma/migrations/20260424211723_init/migration.sql](./prisma/migrations/20260424211723_init/migration.sql)
+- Seed entry: [prisma/seed.ts](./prisma/seed.ts)
 
-## Prisma
+Useful scripts:
 
-Schema: **`prisma/schema.prisma`**. Client output: **`generated/prisma`** (see `generator` block). Config: **`prisma.config.ts`**.
+- `pnpm --filter api run db:generate`
+- `pnpm --filter api run db:push`
+- `pnpm --filter api run db:seed`
+- `pnpm --filter api run db:reset`
 
-| Script                       | Command                 | When to use                                                                             |
-| ---------------------------- | ----------------------- | --------------------------------------------------------------------------------------- |
-| `pnpm run db:generate`       | `prisma generate`       | Regenerate the Prisma client after schema changes (also runs before `build` / `predev`) |
-| `pnpm run db:migrate`        | `prisma migrate dev`    | Create/apply migrations in development                                                  |
-| `pnpm run db:migrate:deploy` | `prisma migrate deploy` | Apply migrations in CI/production                                                       |
-| `pnpm run db:push`           | `prisma db push`        | Push schema without a migration (prototyping only)                                      |
-| `pnpm run db:studio`         | `prisma studio`         | Open Prisma Studio in the browser                                                       |
-| `pnpm run db:reset`          | `prisma migrate reset`  | **Dev only** — drop data, re-apply migrations                                           |
+## Seed data
 
-From repo root, prefix with the filter:
+The seed creates:
 
-```sh
-pnpm --filter api run db:migrate
-pnpm --filter api run db:studio
-```
+- sample billing plans
+- a platform admin account from [prisma/seed/initial-seed.ts](./prisma/seed/initial-seed.ts)
+- one sample organization and owner account
+- no default permissions
 
-## Build & quality
+Change those defaults before using this starter in a real project.
 
-| Script           | Purpose                         |
-| ---------------- | ------------------------------- |
-| `pnpm run build` | `prisma generate && nest build` |
-| `pnpm run tsc`   | `tsc --noEmit`                  |
-| `pnpm run lint`  | ESLint (`src/**/*.ts`)          |
+## Auth endpoints
 
-## OpenAPI & frontends
+- `POST /api/auth/admin/login`
+- `POST /api/auth/login`
+- `POST /api/auth/signup`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+- `POST /api/auth/admin/session`
+- `POST /api/auth/session`
+- `POST /api/auth/admin/refresh`
+- `POST /api/auth/refresh`
+- `POST /api/auth/admin/logout`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
 
-- Swagger UI: **`http://localhost:{PORT}/api/docs`** (default port **3000**).
-- OpenAPI JSON: **`GET /api-json`** — same document the UI uses.
-- **Committed spec:** **`apps/api/swagger-spec.json`** is what **Orval** reads. In **non-production** (`NODE_ENV !== 'production'`), starting the API **overwrites** that file with the current Swagger document (see **`src/main.ts`**). In **production**, nothing is written to disk.
-- After you change controllers/DTOs: run the API once (or restart **`pnpm --filter api dev`**) so **`swagger-spec.json`** updates, then from the repo root run **`pnpm run codegen`** (or rely on the next **`predev`** on a frontend / API, which runs codegen **before** the server — so you may need an **extra** **`pnpm run codegen`** or a **second** dev restart to refresh **`@repo/openapi`**). Commit **`swagger-spec.json`** when the contract should be shared.
+## OpenAPI
 
-## Related
+- Swagger UI: `/docs`
+- JSON: `/api-json`
+- Committed spec: [swagger-spec.json](./swagger-spec.json)
 
-- [Root README](../../README.md) — monorepo setup, Docker, shared commands
-- Next frontends use **`src/app/`** — [Admin](../admin/README.md) · [App](../app/README.md) · [Website](../website/README.md)
+Run `pnpm run codegen` from the repo root after API contract changes.
